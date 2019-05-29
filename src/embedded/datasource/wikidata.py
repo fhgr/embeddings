@@ -16,12 +16,25 @@ from SPARQLWrapper import SPARQLWrapper, JSON
 from builtins import staticmethod
 
 # select all non-profit organizations
+# + subclass of npo
+# + subclass of subclasses of npo
 DEFAULT_BASE_QUERY = """
 PREFIX wd:<http://www.wikidata.org/entity/>
 PREFIX wdt:<http://www.wikidata.org/prop/direct/>
 
 SELECT * WHERE {
-    ?s wdt:P31 wd:Q163740.
+    {?s wdt:P31 wd:Q163740. } 
+    UNION
+    {
+     ?sc wdt:P279 wd:Q163740. 
+     ?s  wdt:P31 ?sc.
+    }
+    UNION 
+    { 
+     ?scc wdt:P279 wd:Q163740. 
+     ?sc  wdt:P279 ?scc.
+     ?s   wdt:P31 ?sc.
+    }
 }
 """
 
@@ -61,7 +74,7 @@ class LodWikidataIterator(object):
         
         self.language = language;
         self.entities = [r['s']['value'] for r in results['results']['bindings']]
-        logging.info("Obtained {} entities to be queries for background information.".format(len(self.entities))) 
+        print("Obtained {} entities to be queries for background information.".format(len(self.entities))) 
         
     @staticmethod
     def get_key(resource_url):
@@ -77,7 +90,6 @@ class LodWikidataIterator(object):
                 <{}> ?p ?o.
                 FILTER(!isLiteral(?o) || lang(?o)="{}")
             }}""".format(entity, self.language)
-            print(query)
             self.sparql.setQuery(query)
             results = self.sparql.query().convert()
             for r in results['results']['bindings']:

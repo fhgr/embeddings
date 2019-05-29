@@ -28,7 +28,8 @@ def serialize_embeddings():
     import embedded.datasource.wikidata as ds
     from csv import writer
     
-    dataSource = ds.LodWikidataIterator(server_url="https://noah.semanticlab.net/sparql/")
+    dataSource = ds.LodWikidataIterator(server_url="http://localhost:8890/sparql/")
+    # dataSource = ds.LodWikidataIterator(server_url="https://noah.semanticlab.net/sparql/")
     with gzip.open("wikidata.csv.gz", "wt", encoding="utf8") as destination_file:
         dst = writer(destination_file)
         for stmt in dataSource:

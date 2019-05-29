@@ -7,6 +7,7 @@ see also: https://rare-technologies.com/word2vec-tutorial/
 '''
 
 import gensim
+import os
 from gzip import GzipFile
 from builtins import staticmethod
 
@@ -17,5 +18,5 @@ class Train(object):
 
     @staticmethod
     def train_model(model_name, sentence_iterator):
-        model = gensim.models.Word2Vec(sentence_iterator)
+        model = gensim.models.Word2Vec(sentence_iterator, workers=os.cpu_count())
         model.save(GzipFile(model_name + ".gz", "w"))
