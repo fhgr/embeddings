@@ -14,6 +14,7 @@ Note:
 import logging
 from SPARQLWrapper import SPARQLWrapper, JSON
 from builtins import staticmethod
+from DistUpgrade import DistUpgradeFetcherSelf
 
 # select all non-profit organizations
 # + subclass of npo
@@ -57,8 +58,7 @@ LIMIT 200
 """
 
 # select all relevant data for a given entitiy.
-
-class LodWikidataIterator(object):
+class WikidataIterator(object):
     '''
     Creates artificial sentences based on a WikiData base query
     '''
@@ -74,7 +74,15 @@ class LodWikidataIterator(object):
         
         self.language = language;
         self.entities = [r['s']['value'] for r in results['results']['bindings']]
-        print("Obtained {} entities to be queries for background information.".format(len(self.entities))) 
+        print("Obtained {} entities to be queries for background information.".format(len(self.entities)))
+        
+    def __iter__(self):
+        return self 
+
+
+class LodWikidataIterator(WikidataIterator):
+    ''' Iterates over Wikidata values
+    '''
         
     @staticmethod
     def get_key(resource_url):
@@ -89,8 +97,29 @@ class LodWikidataIterator(object):
             query = """SELECT * WHERE {{
                 <{}> ?p ?o.
                 FILTER(!isLiteral(?o) || lang(?o)="{}")
+            self.sparql.setQuery(query)
             }}""".format(entity, self.language)
             self.sparql.setQuery(query)
             results = self.sparql.query().convert()
             for r in results['results']['bindings']:
                 yield self.get_key(entity), r['p']['value'], self.get_key(r['o']['value'])
+
+class WikipediaReferencesIterator(WikidataIterator):
+    
+    def __iter__(self):
+        for entity in self.entities:
+            query = """PREFIX wd:<http://www.wikidata.org/entity/>
+            PREFIX wdt:<http://www.wikidata.org/prop/direct/>
+            PREFIX schema: <http://schema.org/>
+            
+            SELECT * FROM <http://wikidata.org> WHERE {{
+              ?url schema:about <{}> .
+            }}
+            """.format(entity)
+            self.sparql.setQuery(query)
+            results = self.sparql.query().convert()
+            for r in results['results']['bindings']:
+                url = r['url']['value']
+                if self.language + ".wikipedia.org" in url:
+                    yield url
+    
