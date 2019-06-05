@@ -110,3 +110,9 @@ venv.bak/
 */.cached-retrieval/
 .cached-retrieval/
 .*.swp
+
+# models
+*.model
+*.model.gz
+*.csv.gz
+*.csv

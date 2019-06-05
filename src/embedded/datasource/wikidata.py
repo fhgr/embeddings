@@ -117,7 +117,13 @@ class WikipediaReferencesIterator(WikidataIterator):
             }}
             """.format(entity)
             self.sparql.setQuery(query)
-            results = self.sparql.query().convert()
+            while True:
+                try:
+                    results = self.sparql.query().convert()
+                    break
+                except Exception as e:
+                    print(e)
+
             for r in results['results']['bindings']:
                 url = r['url']['value']
                 if self.language + ".wikipedia.org" in url:
