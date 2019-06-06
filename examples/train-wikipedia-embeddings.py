@@ -27,10 +27,11 @@ class CacheReader():
 
 # detect multi-word expressions and train with them
 sentences = CacheReader(".cached-retrieval/*.gz")
-phrases = Phraser(Phrases(sentences, min_count=1, threshold=1, delimiter=b' '))  # train model
-
-#trigram  = Phrases(bigram[sentence_stream], min_count=1, delimiter=b' ')
+bigram = Phraser(Phrases(sentences, min_count=1, threshold=1, delimiter=b' '))
 
 sentences = CacheReader(".cached-retrieval/*.gz")
-Train.train_model('wikipedia.model', phrases[sentences])
+trigram  = Phrases(bigram[sentence_stream], min_count=1, threshold=1, delimiter=b' ')
+
+sentences = CacheReader(".cached-retrieval/*.gz")
+Train.train_model('wikipedia-trigram.model', trigram[sentences])
 
