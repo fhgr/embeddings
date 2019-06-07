@@ -17,6 +17,7 @@ class Train(object):
     '''
 
     @staticmethod
-    def train_model(model_name, sentence_iterator):
-        model = gensim.models.Word2Vec(sentence_iterator, workers=os.cpu_count())
+    def train_model(model_name, sentence_iterator, size):
+        ''' number of dimensions to include in the model '''
+        model = gensim.models.Word2Vec(sentence_iterator, size=size, workers=os.cpu_count())
         model.save(GzipFile(model_name + ".gz", "w"))

@@ -1,0 +1,11 @@
+PREFIX wd:<http://www.wikidata.org/entity/>
+PREFIX wdt:<http://www.wikidata.org/prop/direct/>
+PREFIX p: <http://www.wikidata.org/prop/>
+PREFIX ps: <http://www.wikidata.org/prop/statement/>
+PREFIX schema: <http://schema.org/>
+
+SELECT * FROM <http://wikidata.org> WHERE {
+    ?s p:P31/ps:P31/(p:P279|ps:P279)* wd:Q2659904.
+    ?url schema:about ?s.
+    FILTER(STRSTARTS(STR(?url), "https://en.wikipedia"))
+}

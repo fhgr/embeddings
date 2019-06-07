@@ -30,8 +30,8 @@ sentences = CacheReader(".cached-retrieval/*.gz")
 bigram = Phraser(Phrases(sentences, min_count=1, threshold=1, delimiter=b' '))
 
 sentences = CacheReader(".cached-retrieval/*.gz")
-trigram  = Phrases(bigram[sentence_stream], min_count=1, threshold=1, delimiter=b' ')
+trigram  = Phrases(bigram[sentences], min_count=1, threshold=1, delimiter=b' ')
 
 sentences = CacheReader(".cached-retrieval/*.gz")
-Train.train_model('wikipedia-trigram.model', trigram[sentences])
+Train.train_model('wikipedia-trigram.model', trigram[sentences], size=10)
 
