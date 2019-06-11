@@ -3,8 +3,8 @@
 from gensim.models import KeyedVectors, Word2Vec
 from gensim.test.utils import datapath
 
-wv = Word2Vec.load('wikipedia-bigram.model.gz')
-wv.wv.save_word2vec_format('/tmp/wikipedia-bigram.model.bin', binary=True)
+wv = Word2Vec.load('wikipedia-trigram.model.gz')
+wv.wv.save_word2vec_format('/tmp/wikipedia-trigram.model.bin', binary=True)
 
 print("the", wv.most_similar('the'))
 print("environment", wv.most_similar('environment'))

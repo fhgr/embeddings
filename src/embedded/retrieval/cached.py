@@ -37,16 +37,20 @@ class CachedTextRetrieval(object):
             with gzip.open(cache_file, 'rt') as f:
                 return f.read()
             
-        # guard for politeness    
-        while (time() - self.last_access) <= SLEEP_TIME:
-            sleep(0.5)
-             
-        html_content = requests.get(url).text
+        # retrieve the URL and retry, if required 
+        while True:
+            try:
+                # guard for politeness    
+                while (time() - self.last_access) <= SLEEP_TIME:
+                    sleep(0.5)
+                self.last_access = time()
+                html_content = requests.get(url).text
+            except Exception as e:
+                print("Retrying retrieval of '{}': {}".format(url, e))
+
         text_content = get_text(html_content, display_images=False,
                                 deduplicate_captions=False,
                                 display_links=False)
-        self.last_access = time()
-        
         # let's cache again
         with gzip.open(cache_file, 'wt') as f:
             f.write(text_content)
