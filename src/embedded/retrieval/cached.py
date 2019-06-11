@@ -45,6 +45,7 @@ class CachedTextRetrieval(object):
                     sleep(0.5)
                 self.last_access = time()
                 html_content = requests.get(url).text
+                break
             except Exception as e:
                 print("Retrying retrieval of '{}': {}".format(url, e))
 
