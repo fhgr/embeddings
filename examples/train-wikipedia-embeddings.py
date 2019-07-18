@@ -26,12 +26,13 @@ class CacheReader():
                         yield [word.translate(TRANSLATE).lower() for word in sentence.split()]
 
 # detect multi-word expressions and train with them
-sentences = CacheReader(".cached-retrieval/*.gz")
-bigram = Phraser(Phrases(sentences, min_count=1, threshold=1, delimiter=b' '))
+#sentences = CacheReader(".cached-retrieval/*.gz")
+#bigram = Phraser(Phrases(sentences, min_count=1, threshold=1, delimiter=b' '))
+#
+#sentences = CacheReader(".cached-retrieval/*.gz")
+#trigram  = Phrases(bigram[sentences], min_count=1, threshold=1, delimiter=b' ')
 
 sentences = CacheReader(".cached-retrieval/*.gz")
-trigram  = Phrases(bigram[sentences], min_count=1, threshold=1, delimiter=b' ')
-
-sentences = CacheReader(".cached-retrieval/*.gz")
-Train.train_model('wikipedia-trigram.model', trigram[sentences], size=10)
+#Train.train_model('wikipedia-monogram.model', trigram[sentences], size=10)
+Train.train_model('wikipedia-monogram.model', sentences, size=10)
 
