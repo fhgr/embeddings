@@ -81,5 +81,5 @@ class HtmlArchiveReader(object):
                 element_list.append(HtmlArchiveReader.normalize_text(element_text))
             yield element_list
 
-Train.train_model('html.model', HtmlArchiveReader(CORPUS_FILE), size=50)
+Train.train_model('html.model', HtmlArchiveReader(CORPUS_FILE), size=20)
 
